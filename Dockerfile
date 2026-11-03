@@ -24,9 +24,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python requirements
+# Install Python requirements (CPU torch for lightweight cloud container)
 COPY backend/requirements.txt /app/backend/
-RUN pip install --upgrade pip && pip install -r /app/backend/requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r /app/backend/requirements.txt
 
 # Copy backend code
 COPY backend/ /app/backend/
